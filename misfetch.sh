@@ -5,6 +5,8 @@ BLUE='\033[0;34m'
 CYAN='\033[0;36m'
 DEFAULT='\033[0m'
 
+colors=(196 46 21 39 124 15)
+
 display_ascii_art() {
     cat << "EOF"
                     _____       __         .__ 
@@ -58,6 +60,10 @@ get_system_info() {
     printf "%s\n" "${SYSTEM_INFO[@]}"
 }
 
+print_square() {
+    echo -ne "\e[48;5;${1}m   "  # Background color
+}
+
 main() {
     clear
     ASCII_ART=$(display_ascii_art)
@@ -81,6 +87,14 @@ main() {
 
         echo ""
     done
+
+    for color in "${colors[@]}"; do
+        print_square $color
+    done
+
+    echo -e "\e[0m"
+    echo ""
+
 }
 
 main
