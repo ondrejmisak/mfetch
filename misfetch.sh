@@ -18,6 +18,10 @@ display_ascii_art() {
 EOF
 }
 
+print_square() {
+    printf "\e[48;5;${1}m   "
+}
+
 get_system_info() {
     HOSTNAME=$(hostname)
     USER=$(whoami)
@@ -31,8 +35,6 @@ get_system_info() {
 
     RAM=$(( ($(sysctl -n hw.memsize) / 1048576 / 1024)))
     RAM_USAGE=$(top -l 1 | grep 'PhysMem' | awk '{print $2, $6}')
-
-
 
     SYSTEM_INFO=$(printf ".")
     SYSTEM_INFO+=$(printf "\n%s")
@@ -56,12 +58,14 @@ get_system_info() {
     
     SYSTEM_INFO+=$(printf "\n%s    └─ ")
     SYSTEM_INFO+=$(printf "${CYAN}Uptime: ${DEFAULT}%s\n" "$UPTIME")
-
+    printf "%s\n"
+    
     printf "%s\n" "${SYSTEM_INFO[@]}"
-}
+    for color in "${colors[@]}"; do
+        print_square $color
+    done
+    SYSTEM_INFO+=$(printf "${DEFAULT}%s\n")
 
-print_square() {
-    echo -ne "\e[48;5;${1}m   "  # Background color
 }
 
 main() {
@@ -87,13 +91,7 @@ main() {
 
         echo ""
     done
-
-    for color in "${colors[@]}"; do
-        print_square $color
-    done
-
-    echo -e "\e[0m"
-    echo ""
+    printf ""
 
 }
 
